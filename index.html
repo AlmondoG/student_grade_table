@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+    <title>SGT</title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -12,11 +13,11 @@
     <div class="page-header">
         <!-- only show this element when the isnt on mobile -->
         <h1 class="hidden-xs">Student Grade Table
-            <small class="pull-right">Grade Average : <span class="avgGrade"></span></small>
+            <small class="pull-right">Grade Average : <span class="avgGrade bg-secondary"></span></small>
         </h1>
         <!-- only show this element when the user gets to a mobile version -->
         <h3 class="visible-xs">Student Grade Table
-            <small class="pull-right">Grade Average : <span class="avgGrade"></span></small>
+            <small class="pull-right">Grade Average : <span class="avgGrade bg-secondary"></span></small>
         </h3>
     </div>
     <div class="student-add-form col-md-4 pull-right">
@@ -41,6 +42,7 @@
         </div>
         <button type="button" class="btn btn-success add-button" onclick="">Add</button>
         <button type="button" class="btn cancel-button" onclick="">Cancel</button>
+        <button type="button" class="btn btn-primary">Get Data from Server</button>
     </div>
     <div class="student-list-container col-md-8 col-sm-12 pull-left">
         <table class="student-list table">

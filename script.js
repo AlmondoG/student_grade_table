@@ -35,6 +35,7 @@ var studentGradeObject;
 */
 function initializeApp(){
     addClickHandlersToElements();
+    renderGradeAverage();
 }
 
 /***************************************************************************************************
@@ -86,9 +87,9 @@ function addStudent(){
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-    $("#studentName").val();
-    $("#course").val();
-    $("#studentGrade").val();
+    $("#studentName").val("");
+    $("#course").val("");
+    $("#studentGrade").val("");
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -109,7 +110,14 @@ function renderStudentOnDom(studentObj){
     var deleteTableData = $("<td>");
     var deleteButton = $("<button>", {
         text: "DELETE THAT ISH",
-        class: "btn btn-sm"
+        class: "btn btn-sm btn-warning",
+        click: function(){
+            var objectIndex = studentArray.indexOf(studentObj);
+            studentArray.splice(objectIndex, 1);
+            $(row).remove();
+            var avg = calculateGradeAverage(studentArray);
+            renderGradeAverage(avg);
+        }
     });
     $(deleteTableData).append(deleteButton);
     $(row).append(nameText, courseText, gradeText, deleteTableData);
@@ -124,22 +132,33 @@ function renderStudentOnDom(studentObj){
  */
 function updateStudentList(array){
     renderStudentOnDom(array);
-    calculateGradeAverage(array);
-    renderGradeAverage(array);
+    var avg = calculateGradeAverage(studentArray);
+    renderGradeAverage(avg);
 }
 /***************************************************************************************************
  * calculateGradeAverage - loop through the global student array and calculate average grade and return that value
  * @param: {array} students  the array of student objects
  * @returns {number}
  */
-function calculateGradeAverage(){
+function calculateGradeAverage(arrayParam){
+    var totalGrade = 0;
+    for (var studentArrayIndex = 0; studentArrayIndex < arrayParam.length; studentArrayIndex++) {
+        totalGrade += parseFloat(arrayParam[studentArrayIndex].grade);
+    }
+    var averageGrade = totalGrade / arrayParam.length;
+    return parseFloat(averageGrade.toFixed(2));
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
  * @param: {number} average    the grade average
  * @returns {undefined} none
  */
-function renderGradeAverage(){
+function renderGradeAverage(avgNum){
+    if (studentArray.length === 0) {
+        $(".avgGrade").text("0");
+    } else {
+        $(".avgGrade").text(avgNum);
+    }
 }
 
 
