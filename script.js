@@ -159,7 +159,6 @@ function deleteFromServer(studentInfo) {
             "student_id": studentInfo.id
         },
         success: function(result) {
-            console.log("JHON is the man")
         }
     };
 
