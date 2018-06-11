@@ -47,6 +47,7 @@ function initializeApp(){
 function addClickHandlersToElements(){
     $(".add-button").on("click", handleAddClicked);
     $(".cancel-button").on("click", handleCancelClick);
+    $(".data-button").on("click", handleDataClick);
 }
 
 /***************************************************************************************************
@@ -82,6 +83,28 @@ function addStudent(){
 
     clearAddStudentFormInputs();
     updateStudentList(studentObject);
+    sendStudentToServer(studentObject);
+}
+
+
+function sendStudentToServer(newStudentInfo) {
+    var ajaxOptions = {
+        url: "http://s-apis.learningfuze.com/sgt/create",
+        dataType: "json",
+        method: "post",
+        data: {
+            api_key: "3IdDquJkRB",
+            name: newStudentInfo.name,
+            course: newStudentInfo.course,
+            grade: newStudentInfo.grade
+        },
+        success: function(result) {
+            //Do the entries in the studentArray need an ID too?
+            newStudentInfo.id = result.id;
+        }
+    };
+
+    $.ajax(ajaxOptions);
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -110,11 +133,12 @@ function renderStudentOnDom(studentObj){
     var deleteTableData = $("<td>");
     var deleteButton = $("<button>", {
         text: "DELETE THAT ISH",
-        class: "btn btn-sm btn-warning",
+        "class": "btn btn-sm btn-warning",
         click: function(){
             var objectIndex = studentArray.indexOf(studentObj);
             studentArray.splice(objectIndex, 1);
             $(row).remove();
+            deleteFromServer(studentObj);
             var avg = calculateGradeAverage(studentArray);
             renderGradeAverage(avg);
         }
@@ -122,6 +146,24 @@ function renderStudentOnDom(studentObj){
     $(deleteTableData).append(deleteButton);
     $(row).append(nameText, courseText, gradeText, deleteTableData);
     $("tbody").append(row);
+}
+
+
+function deleteFromServer(studentInfo) {
+    var ajaxOptions = {
+        url: "http://s-apis.learningfuze.com/sgt/delete",
+        type: "POST",
+        dataType: "json",
+        data: {
+            api_key: "3IdDquJkRB",
+            "student_id": studentInfo.id
+        },
+        success: function(result) {
+            console.log("JHON is the man")
+        }
+    };
+
+    $.ajax(ajaxOptions);
 }
 
 /***************************************************************************************************
@@ -159,6 +201,38 @@ function renderGradeAverage(avgNum){
     } else {
         $(".avgGrade").text(avgNum);
     }
+}
+
+
+
+function handleDataClick() {
+    var ajaxOptions = {
+        //Why do we need the "http://" in the url? Why did it not work without it
+        url: "http://s-apis.learningfuze.com/sgt/get",
+        dataType: "json",
+        method: "post",
+        //Data is the input
+        data: {
+            api_key: "3IdDquJkRB"
+        },
+        //Success be the output
+        success: function(result) {
+            console.log(result);
+            for (var dataIndex = 0; dataIndex < result.data.length; dataIndex++) {
+                var apiStudentInfo = {
+                    //Why do we need id as a property yo??
+                    id: result.data[dataIndex].id,
+                    name: result.data[dataIndex].name,
+                    course: result.data[dataIndex].course,
+                    grade: result.data[dataIndex].grade
+                };
+                studentArray.push(apiStudentInfo);
+                renderStudentOnDom(apiStudentInfo);
+            }
+        }
+    };
+
+    $.ajax(ajaxOptions);
 }
 
 
