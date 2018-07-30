@@ -22,10 +22,6 @@ $(document).ready(initializeApp);
 
 var studentArray = [];
 
-var studentNameObject;
-var studentCourseObject;
-var studentGradeObject;
-
 
 /***************************************************************************************************
 * initializeApp 
@@ -36,6 +32,8 @@ var studentGradeObject;
 function initializeApp(){
     addClickHandlersToElements();
     renderGradeAverage();
+    $(".updateModalShadow").hide();
+    $(".updateModal").on("click", (e) => e.stopPropagation());
 }
 
 /***************************************************************************************************
@@ -48,6 +46,9 @@ function addClickHandlersToElements(){
     $(".add-button").on("click", handleAddClicked);
     $(".cancel-button").on("click", handleCancelClick);
     $(".data-button").on("click", handleDataClick);
+    $(".updateModalShadow").on("click", updateModalHide);
+    $(".update-button").on("click", updateTheStudent);
+    $(".modal-cancel-button").on("click", updateModalHide);
 }
 
 /***************************************************************************************************
@@ -89,7 +90,7 @@ function addStudent(){
 
 function sendStudentToServer(newStudentInfo) {
     var ajaxOptions = {
-        url: "http://s-apis.learningfuze.com/sgt/create",
+        url: "php/data.php?action=insert",
         dataType: "json",
         method: "post",
         data: {
@@ -130,10 +131,12 @@ function renderStudentOnDom(studentObj){
     var gradeText = $("<td>", {
         text: studentObj.grade
     });
-    var deleteTableData = $("<td>");
+    var deleteUpdateTableData = $("<td>", {
+        "class": "btn-toolbar"
+    });
     var deleteButton = $("<button>", {
-        text: "DELETE THAT ISH",
-        "class": "btn btn-sm btn-warning",
+        text: "DELETE",
+        "class": "btn btn-sm btn-danger",
         click: function(){
             var objectIndex = studentArray.indexOf(studentObj);
             studentArray.splice(objectIndex, 1);
@@ -143,20 +146,27 @@ function renderStudentOnDom(studentObj){
             renderGradeAverage(avg);
         }
     });
-    $(deleteTableData).append(deleteButton);
-    $(row).append(nameText, courseText, gradeText, deleteTableData);
+    var updateButton = $("<button>", {
+        text: "UPDATE",
+        "class": "btn btn-sm btn-warning",
+        click: function() {
+            updateModal(studentObj);
+        }
+    });
+    $(deleteUpdateTableData).append(updateButton, deleteButton);
+    $(row).append(nameText, courseText, gradeText, deleteUpdateTableData);
     $("tbody").append(row);
 }
 
 
 function deleteFromServer(studentInfo) {
     var ajaxOptions = {
-        url: "http://s-apis.learningfuze.com/sgt/delete",
+        url: "php/data.php?action=delete",
         type: "POST",
         dataType: "json",
         data: {
             api_key: "3IdDquJkRB",
-            "student_id": studentInfo.id
+            "id": studentInfo.id
         },
         success: function(result) {
         }
@@ -205,9 +215,10 @@ function renderGradeAverage(avgNum){
 
 
 function handleDataClick() {
+    $("tbody").empty();
     var ajaxOptions = {
         //Why do we need the "http://" in the url? Why did it not work without it
-        url: "http://s-apis.learningfuze.com/sgt/get",
+        url: "php/data.php?action=readAll",
         dataType: "json",
         method: "post",
         //Data is the input
@@ -222,11 +233,11 @@ function handleDataClick() {
                     //Why do we need id as a property yo??
                     id: result.data[dataIndex].id,
                     name: result.data[dataIndex].name,
-                    course: result.data[dataIndex].course,
+                    course: result.data[dataIndex].course_name,
                     grade: result.data[dataIndex].grade
                 };
                 studentArray.push(apiStudentInfo);
-                renderStudentOnDom(apiStudentInfo);
+                updateStudentList(apiStudentInfo);
             }
         }
     };
@@ -236,5 +247,56 @@ function handleDataClick() {
 
 
 
+
+
+//Hide modal function
+function updateModalHide() {
+    $(".updateModalShadow").hide();
+}
+
+
+
+
+
+//Show the modal function
+function updateModal(studentObj) {
+    $(".hidden-id").val(studentObj.id);
+    $("#modalStudentName").val(studentObj.name);
+    $("#modalCourse").val(studentObj.course);
+    $("#modalStudentGrade").val(studentObj.grade);
+    $(".updateModalShadow").show();
+
+}
+
+
+
+
+
+//Update the student function
+function updateTheStudent() {
+    var ajaxCall = {
+        url: "php/data.php?action=update",
+        dataType: "json",
+        method: "post",
+        data: {
+            "id": $(".hidden-id").val(),
+            "name": $("#modalStudentName").val(),
+            "course": $("#modalCourse").val(),
+            "grade": $("#modalStudentGrade").val()
+        },
+        success: function() {
+            handleDataClick();
+            updateModalHide();
+        }
+    };
+
+    $.ajax(ajaxCall);
+}
+
+
+
+
+
+//Clear
 
 
