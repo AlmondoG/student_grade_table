@@ -169,6 +169,7 @@ function deleteFromServer(studentInfo) {
             "id": studentInfo.id
         },
         success: function(result) {
+
         }
     };
 
