@@ -18,3 +18,11 @@
     z-index: 1000;
 }
 
+.name-parent-div, .class-parent-div, .grade-parent-div {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.text-feedback {
+    font-size: 12px;
+}

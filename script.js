@@ -32,8 +32,10 @@ var studentArray = [];
 function initializeApp(){
     addClickHandlersToElements();
     renderGradeAverage();
-    $(".updateModalShadow").hide();
+    updateModalHide();
     $(".updateModal").on("click", (e) => e.stopPropagation());
+    $(".glyph-feedback").hide();
+    $(".text-feedback").hide();
 }
 
 /***************************************************************************************************
@@ -49,6 +51,9 @@ function addClickHandlersToElements(){
     $(".updateModalShadow").on("click", updateModalHide);
     $(".update-button").on("click", updateTheStudent);
     $(".modal-cancel-button").on("click", updateModalHide);
+    $("#studentName").on("keyup", studentNameInput);
+    $("#course").on("keyup", studentClassInput);
+    $("#studentGrade").on("keyup", studentGradeInput);
 }
 
 /***************************************************************************************************
@@ -68,6 +73,7 @@ function handleAddClicked(){
  */
 function handleCancelClick(){
     clearAddStudentFormInputs();
+    removeInputFeedback();
 }
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -77,6 +83,7 @@ function handleCancelClick(){
  */
 function addStudent(){
     var studentObject = {};
+
     studentObject.name = $("#studentName").val();
     studentObject.course = $("#course").val();
     studentObject.grade = $("#studentGrade").val();
@@ -85,6 +92,7 @@ function addStudent(){
     clearAddStudentFormInputs();
     updateStudentList(studentObject);
     sendStudentToServer(studentObject);
+    removeInputFeedback();
 }
 
 
@@ -94,13 +102,11 @@ function sendStudentToServer(newStudentInfo) {
         dataType: "json",
         method: "post",
         data: {
-            api_key: "3IdDquJkRB",
             name: newStudentInfo.name,
             course: newStudentInfo.course,
             grade: newStudentInfo.grade
         },
         success: function(result) {
-            //Do the entries in the studentArray need an ID too?
             newStudentInfo.id = result.id;
         }
     };
@@ -165,11 +171,10 @@ function deleteFromServer(studentInfo) {
         type: "POST",
         dataType: "json",
         data: {
-            api_key: "3IdDquJkRB",
             "id": studentInfo.id
         },
         success: function(result) {
-
+            $(".feedback-div").text("Student Info Deleted!");
         }
     };
 
@@ -218,20 +223,14 @@ function renderGradeAverage(avgNum){
 function handleDataClick() {
     $("tbody").empty();
     var ajaxOptions = {
-        //Why do we need the "http://" in the url? Why did it not work without it
         url: "php/data.php?action=readAll",
         dataType: "json",
         method: "post",
-        //Data is the input
-        data: {
-            api_key: "3IdDquJkRB"
-        },
         //Success be the output
         success: function(result) {
             console.log(result);
             for (var dataIndex = 0; dataIndex < result.data.length; dataIndex++) {
                 var apiStudentInfo = {
-                    //Why do we need id as a property yo??
                     id: result.data[dataIndex].id,
                     name: result.data[dataIndex].name,
                     course: result.data[dataIndex].course_name,
@@ -266,7 +265,6 @@ function updateModal(studentObj) {
     $("#modalCourse").val(studentObj.course);
     $("#modalStudentGrade").val(studentObj.grade);
     $(".updateModalShadow").show();
-
 }
 
 
@@ -294,6 +292,70 @@ function updateTheStudent() {
     $.ajax(ajaxCall);
 }
 
+
+function removeInputFeedback() {
+    $(".glyph-feedback").hide();
+    $(".text-feedback").hide();
+    $(".glyph-feedback").removeClass("glyphicon-remove");
+    $(".glyph-feedback").removeClass("glyphicon-ok");
+    $(".name-parent-div").removeClass("has-error");
+    $(".name-parent-div").removeClass("has-success");
+    $(".class-parent-div").removeClass("has-error");
+    $(".class-parent-div").removeClass("has-success");
+    $(".grade-parent-div").removeClass("has-error");
+    $(".grade-parent-div").removeClass("has-success");
+}
+
+
+function studentNameInput() {
+    if($("#studentName").val() === "") {
+        $(".name-parent-div").addClass("has-error");
+        $(".gf1").addClass("glyphicon-remove");
+        $(".gf1").show();
+        $(".tf1").show();
+    } else {
+        $(".name-parent-div").removeClass("has-error");
+        $(".name-parent-div").addClass("has-success");
+        $(".gf1").removeClass("glyphicon-remove");
+        $(".gf1").addClass("glyphicon-ok");
+        $(".gf1").show();
+        $(".tf1").hide();
+    }
+}
+
+
+function studentClassInput() {
+    if($("#course").val() === "") {
+        $(".class-parent-div").addClass("has-error");
+        $(".gf2").addClass("glyphicon-remove");
+        $(".gf2").show();
+        $(".tf2").show();
+    } else {
+        $(".class-parent-div").removeClass("has-error");
+        $(".class-parent-div").addClass("has-success");
+        $(".gf2").removeClass("glyphicon-remove");
+        $(".gf2").addClass("glyphicon-ok");
+        $(".gf2").show();
+        $(".tf2").hide();
+    }
+}
+
+
+function studentGradeInput() {
+    if(typeof($("#studentGrade").val()) !== "number") {
+        $(".grade-parent-div").addClass("has-error");
+        $(".gf3").addClass("glyphicon-remove");
+        $(".gf3").show();
+        $(".tf3").show();
+    } else {
+        $(".grade-parent-div").removeClass("has-error");
+        $(".grade-parent-div").addClass("has-success");
+        $(".gf3").removeClass("glyphicon-remove");
+        $(".gf3").addClass("glyphicon-ok");
+        $(".gf3").show();
+        $(".tf3").hide();
+    }
+}
 
 
 
