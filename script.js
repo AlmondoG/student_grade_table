@@ -31,6 +31,7 @@ var studentArray = [];
 */
 function initializeApp(){
     addClickHandlersToElements();
+    handleDataClick();
     renderGradeAverage();
     updateModalHide();
     $(".updateModal").on("click", (e) => e.stopPropagation());
@@ -47,7 +48,6 @@ function initializeApp(){
 function addClickHandlersToElements(){
     $(".add-button").on("click", handleAddClicked);
     $(".cancel-button").on("click", handleCancelClick);
-    $(".data-button").on("click", handleDataClick);
     $(".updateModalShadow").on("click", updateModalHide);
     $(".update-button").on("click", updateTheStudent);
     $(".modal-cancel-button").on("click", updateModalHide);
@@ -313,6 +313,7 @@ function studentNameInput() {
         $(".gf1").addClass("glyphicon-remove");
         $(".gf1").show();
         $(".tf1").show();
+        $(".add-button").off("click");
     } else {
         $(".name-parent-div").removeClass("has-error");
         $(".name-parent-div").addClass("has-success");
@@ -320,6 +321,7 @@ function studentNameInput() {
         $(".gf1").addClass("glyphicon-ok");
         $(".gf1").show();
         $(".tf1").hide();
+        $(".add-button").on("click", handleAddClicked);
     }
 }
 
@@ -330,6 +332,7 @@ function studentClassInput() {
         $(".gf2").addClass("glyphicon-remove");
         $(".gf2").show();
         $(".tf2").show();
+        $(".add-button").off("click");
     } else {
         $(".class-parent-div").removeClass("has-error");
         $(".class-parent-div").addClass("has-success");
@@ -337,6 +340,7 @@ function studentClassInput() {
         $(".gf2").addClass("glyphicon-ok");
         $(".gf2").show();
         $(".tf2").hide();
+        $(".add-button").on("click", handleAddClicked);
     }
 }
 
@@ -347,6 +351,7 @@ function studentGradeInput() {
         $(".gf3").addClass("glyphicon-remove");
         $(".gf3").show();
         $(".tf3").show();
+        $(".add-button").off("click");
     } else {
         $(".grade-parent-div").removeClass("has-error");
         $(".grade-parent-div").addClass("has-success");
@@ -354,6 +359,7 @@ function studentGradeInput() {
         $(".gf3").addClass("glyphicon-ok");
         $(".gf3").show();
         $(".tf3").hide();
+        $(".add-button").on("click", handleAddClicked);
     }
 }
 
