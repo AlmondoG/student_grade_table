@@ -1,10 +1,3 @@
-/* information about jsdocs: 
-* param: http://usejsdoc.org/tags-param.html#examples
-* returns: http://usejsdoc.org/tags-returns.html
-* 
-/**
- * Listen for the document to load and initialize the application
- */
 $(document).ready(initializeApp);
 
 /**
@@ -21,6 +14,11 @@ $(document).ready(initializeApp);
  */
 
 var studentArray = [];
+var hasErrors = {
+    name: true,
+    course: true,
+    grade: true
+};
 
 
 /***************************************************************************************************
@@ -63,7 +61,12 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(){
+    if (checkForErrors(hasErrors)) {
+        return;
+    }
     addStudent();
+
+    // checkForErrors(hasErrors) ? return : addStudent();
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -75,6 +78,21 @@ function handleCancelClick(){
     clearAddStudentFormInputs();
     removeInputFeedback();
 }
+/***************************************************************************************************
+ * checkForErrors - Helper function to check for errors in our validation
+ * @param: {object}
+ * @return {bool}
+ */
+function checkForErrors(errors) {
+    for (var type in errors) {
+        if (errors[type]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
  * @param {undefined} none
@@ -120,6 +138,10 @@ function clearAddStudentFormInputs(){
     $("#studentName").val("");
     $("#course").val("");
     $("#studentGrade").val("");
+
+    hasErrors.name = true;
+    hasErrors.course = true;
+    hasErrors.grade = true;
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -174,7 +196,7 @@ function deleteFromServer(studentInfo) {
             "id": studentInfo.id
         },
         success: function(result) {
-            $(".feedback-div").text("Student Info Deleted!");
+            // $(".feedback-div").text("Student Info Deleted!");
         }
     };
 
@@ -313,7 +335,7 @@ function studentNameInput() {
         $(".gf1").addClass("glyphicon-remove");
         $(".gf1").show();
         $(".tf1").show();
-        $(".add-button").off("click");
+        hasErrors.name = true;
     } else {
         $(".name-parent-div").removeClass("has-error");
         $(".name-parent-div").addClass("has-success");
@@ -321,7 +343,7 @@ function studentNameInput() {
         $(".gf1").addClass("glyphicon-ok");
         $(".gf1").show();
         $(".tf1").hide();
-        $(".add-button").on("click", handleAddClicked);
+        hasErrors.name = false;
     }
 }
 
@@ -332,7 +354,7 @@ function studentClassInput() {
         $(".gf2").addClass("glyphicon-remove");
         $(".gf2").show();
         $(".tf2").show();
-        $(".add-button").off("click");
+        hasErrors.course = true;
     } else {
         $(".class-parent-div").removeClass("has-error");
         $(".class-parent-div").addClass("has-success");
@@ -340,18 +362,18 @@ function studentClassInput() {
         $(".gf2").addClass("glyphicon-ok");
         $(".gf2").show();
         $(".tf2").hide();
-        $(".add-button").on("click", handleAddClicked);
+        hasErrors.course = false;
     }
 }
 
 
 function studentGradeInput() {
-    if(typeof($("#studentGrade").val()) !== "number") {
+    if(parseInt($("#studentGrade").val()) < 0 || parseInt($("#studentGrade").val()) > 100 || $("#studentGrade").val() === "") {
         $(".grade-parent-div").addClass("has-error");
         $(".gf3").addClass("glyphicon-remove");
         $(".gf3").show();
         $(".tf3").show();
-        $(".add-button").off("click");
+        hasErrors.grade = true;
     } else {
         $(".grade-parent-div").removeClass("has-error");
         $(".grade-parent-div").addClass("has-success");
@@ -359,7 +381,7 @@ function studentGradeInput() {
         $(".gf3").addClass("glyphicon-ok");
         $(".gf3").show();
         $(".tf3").hide();
-        $(".add-button").on("click", handleAddClicked);
+        hasErrors.grade = false;
     }
 }
 

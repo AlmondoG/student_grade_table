@@ -26,3 +26,7 @@
 .text-feedback {
     font-size: 12px;
 }
+
+.add-button, .cancel-button {
+    margin-top: 10px;
+}
