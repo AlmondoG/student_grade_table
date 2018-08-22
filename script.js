@@ -35,6 +35,7 @@ function initializeApp(){
     $(".updateModal").on("click", (e) => e.stopPropagation());
     $(".glyph-feedback").hide();
     $(".text-feedback").hide();
+    $(".feedback-div").hide();
 }
 
 /***************************************************************************************************
@@ -52,6 +53,7 @@ function addClickHandlersToElements(){
     $("#studentName").on("keyup", studentNameInput);
     $("#course").on("keyup", studentClassInput);
     $("#studentGrade").on("keyup", studentGradeInput);
+    $(".feedback-div").on("click", hideFeedbackDiv);
 }
 
 /***************************************************************************************************
@@ -62,6 +64,8 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(){
     if (checkForErrors(hasErrors)) {
+        hideFeedbackDiv();
+        $(".fd-error").show();
         return;
     }
     addStudent();
@@ -111,6 +115,8 @@ function addStudent(){
     updateStudentList(studentObject);
     sendStudentToServer(studentObject);
     removeInputFeedback();
+    hideFeedbackDiv();
+    $(".fd-add").show();
 }
 
 
@@ -195,8 +201,9 @@ function deleteFromServer(studentInfo) {
         data: {
             "id": studentInfo.id
         },
-        success: function(result) {
-            // $(".feedback-div").text("Student Info Deleted!");
+        success: function() {
+            hideFeedbackDiv();
+            $(".fd-delete").show();
         }
     };
 
@@ -250,7 +257,6 @@ function handleDataClick() {
         method: "post",
         //Success be the output
         success: function(result) {
-            console.log(result);
             for (var dataIndex = 0; dataIndex < result.data.length; dataIndex++) {
                 var apiStudentInfo = {
                     id: result.data[dataIndex].id,
@@ -308,6 +314,8 @@ function updateTheStudent() {
         success: function() {
             handleDataClick();
             updateModalHide();
+            hideFeedbackDiv();
+            $(".fd-update").show();
         }
     };
 
@@ -368,7 +376,7 @@ function studentClassInput() {
 
 
 function studentGradeInput() {
-    if(parseInt($("#studentGrade").val()) < 0 || parseInt($("#studentGrade").val()) > 100 || $("#studentGrade").val() === "") {
+    if(parseInt($("#studentGrade").val()) < 0 || parseInt($("#studentGrade").val()) > 100 || isNaN($("#studentGrade").val())) {
         $(".grade-parent-div").addClass("has-error");
         $(".gf3").addClass("glyphicon-remove");
         $(".gf3").show();
@@ -383,6 +391,11 @@ function studentGradeInput() {
         $(".tf3").hide();
         hasErrors.grade = false;
     }
+}
+
+
+function hideFeedbackDiv() {
+    $(".feedback-div").hide();
 }
 
 

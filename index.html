@@ -6,6 +6,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="script.js"></script>
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
@@ -49,7 +50,10 @@
         <div class="text-feedback tf3">Please Enter a Valid Grade</div>
         <button type="button" class="btn btn-success add-button" onclick="">Add</button>
         <button type="button" class="btn cancel-button" onclick="">Cancel</button>
-        <div class="feedback-div"></div>
+        <div class="feedback-div fd-error btn btn-warning"><i class="fa fa-close"></i> Student Info Error! Please Add Appropriate Values</div>
+        <div class="feedback-div fd-update btn btn-success"><i class="fa fa-close"></i> Student Info Updated!</div>
+        <div class="feedback-div fd-delete btn btn-success"><i class="fa fa-close"></i> Student Info Deleted!</div>
+        <div class="feedback-div fd-add btn btn-success"><i class="fa fa-close"></i> Student Info Added!</div>
     </div>
     <div class="student-list-container col-md-8 col-sm-12 pull-left">
         <table class="student-list table">
