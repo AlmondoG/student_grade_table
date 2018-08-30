@@ -19,6 +19,7 @@ var hasErrors = {
     course: true,
     grade: true
 };
+var potentialDeletes = null;
 
 
 /***************************************************************************************************
@@ -32,6 +33,7 @@ function initializeApp(){
     handleDataClick();
     renderGradeAverage();
     updateModalHide();
+    deleteModalHide();
     $(".updateModal").on("click", (e) => e.stopPropagation());
     $(".glyph-feedback").hide();
     $(".text-feedback").hide();
@@ -48,12 +50,14 @@ function addClickHandlersToElements(){
     $(".add-button").on("click", handleAddClicked);
     $(".cancel-button").on("click", handleCancelClick);
     $(".updateModalShadow").on("click", updateModalHide);
+    $(".deleteModalShadow").on("click", deleteModalHide);
     $(".update-button").on("click", updateTheStudent);
     $(".modal-cancel-button").on("click", updateModalHide);
     $("#studentName").on("keyup", studentNameInput);
     $("#course").on("keyup", studentClassInput);
     $("#studentGrade").on("keyup", studentGradeInput);
     $(".feedback-div").on("click", hideFeedbackDiv);
+    $(".yes-button").on("click", deleteFromServer);
 }
 
 /***************************************************************************************************
@@ -112,8 +116,8 @@ function addStudent(){
     studentArray.push(studentObject);
 
     clearAddStudentFormInputs();
-    updateStudentList(studentObject);
     sendStudentToServer(studentObject);
+    updateStudentList(studentObject);
     removeInputFeedback();
     hideFeedbackDiv();
     $(".fd-add").show();
@@ -174,8 +178,8 @@ function renderStudentOnDom(studentObj){
         click: function(){
             var objectIndex = studentArray.indexOf(studentObj);
             studentArray.splice(objectIndex, 1);
-            $(row).remove();
-            deleteFromServer(studentObj);
+            potentialDeletes = studentObj;
+            deleteModal();
             var avg = calculateGradeAverage(studentArray);
             renderGradeAverage(avg);
         }
@@ -193,17 +197,18 @@ function renderStudentOnDom(studentObj){
 }
 
 
-function deleteFromServer(studentInfo) {
+function deleteFromServer(studentRowID) {
     var ajaxOptions = {
         url: "php/data.php?action=delete",
         type: "POST",
         dataType: "json",
         data: {
-            "id": studentInfo.id
+            "id": potentialDeletes.id
         },
         success: function() {
             hideFeedbackDiv();
             $(".fd-delete").show();
+            handleDataClick();
         }
     };
 
@@ -277,7 +282,7 @@ function handleDataClick() {
 
 
 
-//Hide modal function
+//Hide update modal function
 function updateModalHide() {
     $(".updateModalShadow").hide();
 }
@@ -285,8 +290,16 @@ function updateModalHide() {
 
 
 
+//Hide delete modal function
+function deleteModalHide() {
+    $(".deleteModalShadow").hide();
+}
 
-//Show the modal function
+
+
+
+
+//Show update modal function
 function updateModal(studentObj) {
     $(".hidden-id").val(studentObj.id);
     $("#modalStudentName").val(studentObj.name);
@@ -295,6 +308,13 @@ function updateModal(studentObj) {
     $(".updateModalShadow").show();
 }
 
+
+
+
+//Show delete modal function
+function deleteModal() {
+    $(".deleteModalShadow").show();
+}
 
 
 
@@ -338,7 +358,9 @@ function removeInputFeedback() {
 
 
 function studentNameInput() {
-    if($("#studentName").val() === "") {
+    var nameInput = $("#studentName").val();
+    var finalizedNameInput = nameInput.trim();
+    if(finalizedNameInput === "") {
         $(".name-parent-div").addClass("has-error");
         $(".gf1").addClass("glyphicon-remove");
         $(".gf1").show();
@@ -357,7 +379,9 @@ function studentNameInput() {
 
 
 function studentClassInput() {
-    if($("#course").val() === "") {
+    var courseInput = $("#course").val();
+    var finalizedCourseInput = courseInput.trim();
+    if(finalizedCourseInput === "") {
         $(".class-parent-div").addClass("has-error");
         $(".gf2").addClass("glyphicon-remove");
         $(".gf2").show();
@@ -376,7 +400,9 @@ function studentClassInput() {
 
 
 function studentGradeInput() {
-    if(parseInt($("#studentGrade").val()) < 0 || parseInt($("#studentGrade").val()) > 100 || isNaN($("#studentGrade").val())) {
+    var gradeInput = $("#studentGrade").val();
+    var finalizedGradeInput = gradeInput.trim();
+    if(parseInt(finalizedGradeInput) < 0 || parseInt(finalizedGradeInput) > 100 || isNaN(finalizedGradeInput) || finalizedGradeInput === "") {
         $(".grade-parent-div").addClass("has-error");
         $(".gf3").addClass("glyphicon-remove");
         $(".gf3").show();
