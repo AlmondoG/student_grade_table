@@ -11,14 +11,14 @@
     <meta name="viewport" content="initial-scale=1, user-scalable=no">
 </head>
 <body>
-<div class="container">
+<div id="full-container" class="container">
     <div class="page-header">
-        <!-- only show this element when the isnt on mobile -->
+        <!-- only show this element when the isn't on mobile -->
         <h1 class="hidden-xs">Student Grade Table
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default"></span></small>
         </h1>
         <!-- only show this element when the user gets to a mobile version -->
-        <h3 class="visible-xs">Student Grade Table
+        <h3 class="visible-xs pull-right">Student Grade Table
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default"></span></small>
         </h3>
     </div>
@@ -60,10 +60,16 @@
     <div class="student-list-container col-md-8 col-sm-12 pull-left">
         <table class="student-list table">
             <thead>
-            <tr>
+            <tr class="hidden-xs">
                 <th>Student Name</th>
                 <th>Student Course</th>
                 <th>Student Grade</th>
+                <th>Operations</th>
+            </tr>
+            <tr class="visible-xs">
+                <th>Name</th>
+                <th>Course</th>
+                <th>Grade</th>
                 <th>Operations</th>
             </tr>
             </thead>

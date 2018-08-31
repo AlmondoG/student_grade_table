@@ -36,10 +36,11 @@
 }
 
 .add-button, .cancel-button {
-    margin-top: 10px;
+    margin: 10px 0 ;
 }
 
 .feedback-div {
     display: inline-block;
     margin-top: 50px;
+    margin-bottom: 10px;
 }

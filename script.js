@@ -426,6 +426,18 @@ function hideFeedbackDiv() {
 
 
 
+function screenSize() {
+    var width = $(window).width;
+    if(width <= 414) {
+        $("#full-container").removeClass("container");
+        $("#full-container").addClass("container-fluid");
+        $(".student-list-container").removeClass("pull-left");
+        $(".student-list").removeClass("table");
+        $(".student-list").addClass("table-condensed");
+    }
+}
+
+
 
 //Clear
 
