@@ -49,10 +49,10 @@
         </div>
         <div class="text-feedback tf3">Please Enter a Valid Grade</div>
         <div>
-            <button type="button" class="btn btn-success add-button" onclick="">Add</button>
-            <button type="button" class="btn cancel-button" onclick="">Cancel</button>
+            <button type="button" class="btn btn-success add-button">Add</button>
+            <button type="button" class="btn cancel-button">Cancel</button>
         </div>
-        <div class="feedback-div fd-error btn btn-warning"><i class="fa fa-close"></i> Student Info Error! Please Add Appropriate Values</div>
+        <div class="feedback-div fd-error btn btn-warning"><i class="fa fa-close"></i> Error! Please Add Appropriate Values</div>
         <div class="feedback-div fd-update btn btn-success"><i class="fa fa-close"></i> Student Info Updated!</div>
         <div class="feedback-div fd-delete btn btn-success"><i class="fa fa-close"></i> Student Info Deleted!</div>
         <div class="feedback-div fd-add btn btn-success"><i class="fa fa-close"></i> Student Info Added!</div>
@@ -81,24 +81,30 @@
 <div class="updateModalShadow">
     <div class="updateModal">
         <h4>Update Student</h4>
-        <div class="input-group form-group">
+        <div class="name-parent-modal-div input-group form-group">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-user"></span>
             </span>
             <input type="text" class="form-control" name="studentName" id="modalStudentName" placeholder="Student Name">
+            <span class="glyph-feedback-modal gfm1 glyphicon form-control-feedback"></span>
         </div>
-        <div class="input-group form-group">
+        <div class="text-feedback-modal tfm1">Please Enter a Valid Username</div>
+        <div class="course-parent-modal-div input-group form-group">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-list-alt"></span>
             </span>
             <input type="text" class="form-control" name="course" id="modalCourse" placeholder="Student Course">
+            <span class="glyph-feedback-modal gfm2 glyphicon form-control-feedback"></span>
         </div>
-        <div class="input-group form-group">
+        <div class="text-feedback-modal tfm2">Please Enter a Valid Course</div>
+        <div class="grade-parent-modal-div input-group form-group">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-education"></span>
             </span>
             <input type="text" class="form-control" name="studentGrade" id="modalStudentGrade" placeholder="Student Grade">
+            <span class="glyph-feedback-modal gfm3 glyphicon form-control-feedback"></span>
         </div>
+        <div class="text-feedback-modal tfm3">Please Enter a Valid Grade</div>
         <input type="hidden" class="hidden-id">
         <button type="button" class="btn btn-success update-button" onclick="">Update</button>
         <button type="button" class="btn modal-cancel-button" onclick="">Cancel</button>
