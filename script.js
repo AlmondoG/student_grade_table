@@ -19,6 +19,11 @@ var hasErrors = {
     course: true,
     grade: true
 };
+var modalHasErrors = {
+    name: false,
+    course: false,
+    grade: false
+};
 var potentialDeletes = null;
 
 
@@ -29,6 +34,7 @@ var potentialDeletes = null;
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
+    screenSize();
     addClickHandlersToElements();
     handleDataClick();
     renderGradeAverage();
@@ -47,15 +53,19 @@ function initializeApp(){
 *     
 */
 function addClickHandlersToElements(){
+    $(window).on("resize", screenSize);
     $(".add-button").on("click", handleAddClicked);
     $(".cancel-button").on("click", handleCancelClick);
     $(".updateModalShadow").on("click", updateModalHide);
     $(".deleteModalShadow").on("click", deleteModalHide);
-    $(".update-button").on("click", updateTheStudent);
+    $(".update-button").on("click", handleUpdateClick);
     $(".modal-cancel-button").on("click", updateModalHide);
     $("#studentName").on("keyup", studentNameInput);
     $("#course").on("keyup", studentClassInput);
     $("#studentGrade").on("keyup", studentGradeInput);
+    $("#modalStudentName").on("keyup", modalStudentNameInput);
+    $("#modalCourse").on("keyup", modalStudentClassInput);
+    $("#modalStudentGrade").on("keyup", modalStudentGradeInput);
     $(".feedback-div").on("click", hideFeedbackDiv);
     $(".yes-button").on("click", deleteFromServer);
 }
@@ -76,6 +86,15 @@ function handleAddClicked(){
 
     // checkForErrors(hasErrors) ? return : addStudent();
 }
+
+function handleUpdateClick() {
+    if(checkForErrors(modalHasErrors)) {
+        return;
+    }
+    updateTheStudent();
+}
+
+
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
  * @param: {undefined} none
@@ -174,7 +193,7 @@ function renderStudentOnDom(studentObj){
     });
     var deleteButton = $("<button>", {
         text: "DELETE",
-        "class": "btn btn-sm btn-danger",
+        "class": "delete-btn btn btn-sm btn-danger",
         click: function(){
             var objectIndex = studentArray.indexOf(studentObj);
             studentArray.splice(objectIndex, 1);
@@ -186,7 +205,7 @@ function renderStudentOnDom(studentObj){
     });
     var updateButton = $("<button>", {
         text: "UPDATE",
-        "class": "btn btn-sm btn-warning",
+        "class": "update-btn btn btn-sm btn-warning",
         click: function() {
             updateModal(studentObj);
         }
@@ -285,6 +304,10 @@ function handleDataClick() {
 //Hide update modal function
 function updateModalHide() {
     $(".updateModalShadow").hide();
+    removeModalInputFeedback();
+    modalHasErrors.name = false;
+    modalHasErrors.course = false;
+    modalHasErrors.grade = false;
 }
 
 
@@ -333,6 +356,7 @@ function updateTheStudent() {
         },
         success: function() {
             handleDataClick();
+            removeModalInputFeedback();
             updateModalHide();
             hideFeedbackDiv();
             $(".fd-update").show();
@@ -354,6 +378,20 @@ function removeInputFeedback() {
     $(".class-parent-div").removeClass("has-success");
     $(".grade-parent-div").removeClass("has-error");
     $(".grade-parent-div").removeClass("has-success");
+}
+
+
+function removeModalInputFeedback() {
+    $(".glyph-feedback-modal").hide();
+    $(".text-feedback-modal").hide();
+    $(".glyph-feedback-modal").removeClass("glyphicon-remove");
+    $(".glyph-feedback-modal").removeClass("glyphicon-ok");
+    $(".name-parent-modal-div").removeClass("has-error");
+    $(".name-parent-modal-div").removeClass("has-success");
+    $(".course-parent-modal-div").removeClass("has-error");
+    $(".course-parent-modal-div").removeClass("has-success");
+    $(".grade-parent-modal-div").removeClass("has-error");
+    $(".grade-parent-modal-div").removeClass("has-success");
 }
 
 
@@ -420,6 +458,69 @@ function studentGradeInput() {
 }
 
 
+function modalStudentNameInput() {
+    var nameInput = $("#modalStudentName").val();
+    var finalizedNameInput = nameInput.trim();
+    if(finalizedNameInput === "") {
+        $(".name-parent-modal-div").addClass("has-error");
+        $(".gfm1").addClass("glyphicon-remove");
+        $(".gfm1").show();
+        $(".tfm1").show();
+        modalHasErrors.name = true;
+    } else {
+        $(".name-parent-modal-div").removeClass("has-error");
+        $(".name-parent-modal-div").addClass("has-success");
+        $(".gfm1").removeClass("glyphicon-remove");
+        $(".gfm1").addClass("glyphicon-ok");
+        $(".gfm1").show();
+        $(".tfm1").hide();
+        modalHasErrors.name = false;
+    }
+}
+
+
+function modalStudentClassInput() {
+    var courseInput = $("#modalCourse").val();
+    var finalizedCourseInput = courseInput.trim();
+    if(finalizedCourseInput === "") {
+        $(".course-parent-modal-div").addClass("has-error");
+        $(".gfm2").addClass("glyphicon-remove");
+        $(".gfm2").show();
+        $(".tfm2").show();
+        modalHasErrors.course = true;
+    } else {
+        $(".course-parent-modal-div").removeClass("has-error");
+        $(".course-parent-modal-div").addClass("has-success");
+        $(".gfm2").removeClass("glyphicon-remove");
+        $(".gfm2").addClass("glyphicon-ok");
+        $(".gfm2").show();
+        $(".tfm2").hide();
+        modalHasErrors.course = false;
+    }
+}
+
+
+function modalStudentGradeInput() {
+    var gradeInput = $("#modalStudentGrade").val();
+    var finalizedGradeInput = gradeInput.trim();
+    if(parseInt(finalizedGradeInput) < 0 || parseInt(finalizedGradeInput) > 100 || isNaN(finalizedGradeInput) || finalizedGradeInput === "") {
+        $(".grade-parent-modal-div").addClass("has-error");
+        $(".gfm3").addClass("glyphicon-remove");
+        $(".gfm3").show();
+        $(".tfm3").show();
+        modalHasErrors.grade = true;
+    } else {
+        $(".grade-parent-modal-div").removeClass("has-error");
+        $(".grade-parent-modal-div").addClass("has-success");
+        $(".gfm3").removeClass("glyphicon-remove");
+        $(".gfm3").addClass("glyphicon-ok");
+        $(".gfm3").show();
+        $(".tfm3").hide();
+        modalHasErrors.grade = false;
+    }
+}
+
+
 function hideFeedbackDiv() {
     $(".feedback-div").hide();
 }
@@ -427,13 +528,19 @@ function hideFeedbackDiv() {
 
 
 function screenSize() {
-    var width = $(window).width;
+    var width = window.innerWidth;
     if(width <= 414) {
         $("#full-container").removeClass("container");
         $("#full-container").addClass("container-fluid");
         $(".student-list-container").removeClass("pull-left");
         $(".student-list").removeClass("table");
         $(".student-list").addClass("table-condensed");
+    } else {
+        $("#full-container").removeClass("container-fluid");
+        $("#full-container").addClass("container");
+        $(".student-list-container").addClass("pull-left");
+        $(".student-list").removeClass("table-condensed");
+        $(".student-list").addClass("table");
     }
 }
 

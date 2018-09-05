@@ -26,21 +26,51 @@
     z-index: 1000;
 }
 
-.name-parent-div, .class-parent-div, .grade-parent-div {
+.name-parent-div, .name-parent-modal-div, .class-parent-div, .course-parent-modal-div, .grade-parent-div, .grade-parent-modal-div {
     margin-bottom: 10px;
     margin-top: 10px;
 }
 
-.text-feedback {
+.text-feedback, .text-feedback-modal {
     font-size: 12px;
 }
 
-.add-button, .cancel-button {
+.add-button, .cancel-button, .update-button, .modal-cancel-button {
     margin: 10px 0 ;
+}
+
+.update-btn, .delete-btn {
+    margin: 2px 0;
 }
 
 .feedback-div {
     display: inline-block;
     margin-top: 50px;
     margin-bottom: 10px;
+}
+
+@media (max-width: 1182px) {
+    .updateModal {
+        width: 295px;
+        background-color: #f5f5f5;
+        padding: 1em;
+        border-radius: .2em;
+        z-index: 1000;
+    }
+}
+
+@media (max-width: 1159px) {
+    .deleteModal {
+        width: 290px;
+        background-color: #f5f5f5;
+        padding: 1em;
+        border-radius: .2em;
+        z-index: 1000;
+    }
+}
+
+@media (max-width: 991px) {
+    .student-list-container {
+        clear: both;
+    }
 }
