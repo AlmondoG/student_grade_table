@@ -128,10 +128,13 @@ function checkForErrors(errors) {
  */
 function addStudent(){
     var studentObject = {};
+    var grades = $("#studentGrade").val();
+    var numGrades = parseFloat(grades);
+    var roundedGrades = numGrades.toFixed(2);
 
     studentObject.name = $("#studentName").val();
     studentObject.course = $("#course").val();
-    studentObject.grade = $("#studentGrade").val();
+    studentObject.grade = roundedGrades;
     studentArray.push(studentObject);
 
     clearAddStudentFormInputs();
