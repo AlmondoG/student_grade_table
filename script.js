@@ -181,15 +181,21 @@ function clearAddStudentFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom(studentObj){
+    var numGrade = parseFloat(studentObj.grade);
+    var fixedNumGrade = numGrade.toFixed(2);
+
     var row = $("<tr>");
     var nameText = $("<td>", {
         text: studentObj.name
     });
     var courseText = $("<td>", {
-        text: studentObj.course
+        text: studentObj.course,
+        align: "center"
     });
     var gradeText = $("<td>", {
-        text: studentObj.grade
+        text: fixedNumGrade,
+        align: "right",
+        style: "padding-right: 9%"
     });
     var deleteUpdateTableData = $("<td>", {
         "class": "btn-toolbar"
